@@ -198,10 +198,6 @@ bool TextOverlay::truncated(int i) const
 {
     return state->items.at(i).overflow;
 }
-int TextOverlay::pixelSize(int i) const
-{
-    return state->items.at(i).font.pixelSize();
-}
 void TextOverlay::selectAll()
 {
     state->anchor = 0;
@@ -294,8 +290,10 @@ void TextOverlay::mousePressEvent(QMouseEvent* e)
     if (e->button() != Qt::LeftButton)
         return;
     auto& s = *state;
+    const bool inExpanded = s.expanded >= 0 && s.items[s.expanded].bounds.contains(e->position());
     for (int i = int(s.items.size()) - 1; i >= 0; --i)
-        if (s.items[i].overflow && s.moreRect(i).contains(e->position())) {
+        if ((!inExpanded || i == s.expanded) && s.items[i].overflow
+            && s.moreRect(i).contains(e->position())) {
             expand(i == s.expanded ? -1 : i);
             return;
         }
@@ -371,13 +369,22 @@ void TextOverlay::keyPressEvent(QKeyEvent* e)
         update();
     } else if (e->key() == Qt::Key_Left || e->key() == Qt::Key_Right || e->key() == Qt::Key_Home
         || e->key() == Qt::Key_End) {
-        QTextBoundaryFinder boundary(QTextBoundaryFinder::Grapheme, s.all);
-        boundary.setPosition(s.cursor);
-        int next = e->key() == Qt::Key_Left ? boundary.toPreviousBoundary() : boundary.toNextBoundary();
+        const bool extend = e->modifiers() & Qt::ShiftModifier;
+        int next = s.cursor;
         if (e->key() == Qt::Key_Home)
             next = 0;
-        if (e->key() == Qt::Key_End)
+        else if (e->key() == Qt::Key_End)
             next = s.all.size();
+        else if (!extend && s.anchor != s.cursor)
+            next = e->key() == Qt::Key_Left ? qMin(s.anchor, s.cursor) : qMax(s.anchor, s.cursor);
+        else {
+            QTextBoundaryFinder boundary(QTextBoundaryFinder::Grapheme, s.all);
+            boundary.setPosition(s.cursor);
+            const int position
+                = e->key() == Qt::Key_Left ? boundary.toPreviousBoundary() : boundary.toNextBoundary();
+            if (position >= 0)
+                next = position;
+        }
         s.cursor = qBound(0, next, int(s.all.size()));
         if (!(e->modifiers() & Qt::ShiftModifier))
             s.anchor = s.cursor;

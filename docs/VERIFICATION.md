@@ -1,28 +1,24 @@
 # 验证
 
-版本 **0.4.2**，2026-10-26。验证环境为 Fedora 44／KDE Plasma Wayland，Qt 6.11.2、KPipeWire 6.7.5，构建使用 GCC 16。当前支持范围以此平台为准。
+版本 **0.4.3**，2026-10-26。环境：Fedora 44／KDE Plasma Wayland，Qt 6.11.2、KPipeWire 6.7.5、GCC 16。
 
 ## 自动检查
 
-`ctest --test-dir build --output-on-failure` 六组全部通过，约 3.3 秒：
+`ctest --test-dir build --output-on-failure` 六组通过，约 3.3 秒；真实 Wayland 编辑检查通过。
 
 | 检查 | 覆盖 |
 | --- | --- |
-| core-check | 坐标恢复、合成、遮挡／马赛克、裁切、撤销、PNG／剪切板、API、视频末帧时长 |
-| editor-check | 框选、文字样式、涂抹、跨框选字、复制、菜单与识图卡片 |
-| lifecycle-check | 私有 D-Bus、设置持久化、旧会话隔离、延迟录屏、OCR → 文本翻译 |
-| audio-check | 异步音源查询、停止、失败、进程复用与大量诊断输出 |
-| ocr-check | 模拟 worker 复用与取消，可选真实语言模型 |
-| repository-check | 安装／卸载隔离验证、文档链接、Python／shell 语法 |
+| core-check | 坐标、合成、撤销、输出、API、结果失效、视频时长 |
+| editor-check | 绘制、跨框选择与边界、展开命中、菜单、识图卡片 |
+| lifecycle-check | 设置、会话、延迟录屏、OCR → 文本翻译 |
+| audio-check | 音源查询、停止、失败、复用与大量进程输出 |
+| ocr-check | worker 复用／取消，可选真实语言模型 |
+| repository-check | 隔离安装／卸载、链接及脚本语法 |
 
-默认检查无需用户桌面、模型或真实 API。FFmpeg 媒体样本按可用编码器执行；缺失时明确跳过该格式。GitHub CI 使用 Fedora 44，远端结果在推送后产生。
-
-更名后已重新验证 Mokou Screenshot 的桌面权限、PrtScn、PNG 捕获、MP4 录屏、配置迁移与本地 OCR 环境。
+检查使用临时配置与模拟服务。媒体样本按可用编码器执行；GitHub CI 结果在推送后产生。
 
 ## 桌面与模型
 
-已有实机路径覆盖：截图、PNG 保存与复制、区域 MP4／WebM、系统声音、停止封装、画笔与涂抹式马赛克、文字输入、OCR 跨框复制、字体菜单及内嵌识图结果。原生检查使用合成画布，结束恢复剪切板。
+实机路径已覆盖截图／复制、MP4／WebM、系统声音、停止封装、涂抹式马赛克、文字输入、跨框复制与工具菜单。原生编辑检查使用合成画布并恢复剪切板。
 
-中英日、法语、韩语和俄语用清晰横排样本验证；连续请求会复用本地模型。真实 AI 服务的输出质量取决于模型，协议检查使用本机模拟服务。
-
-复现命令见 [开发](DEVELOPMENT.md) 与 [OCR](OCR.md)。待补覆盖：多显示器混合缩放、真实输入法候选窗、长时音画同步，以及复杂竖排阅读顺序。
+本地中英日／法韩俄以清晰横排样本验证；真实模型检查命令见 [OCR](OCR.md)。多屏混合缩放、输入法候选窗、长时音画同步与复杂竖排仍待覆盖。复现入口见 [开发](DEVELOPMENT.md)。

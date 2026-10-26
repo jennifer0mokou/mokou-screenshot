@@ -2,7 +2,7 @@
 
 用于 **Fedora KDE Plasma Wayland** 的截图、标注与区域录屏工具。按 **PrtScn** 冻结桌面，框选后继续调整；保存时写入 PNG 并复制图片到剪切板。
 
-当前版本 **0.4.2** · [MIT](LICENSE) · [版本记录](docs/CHANGELOG.md)
+当前版本 **0.4.3** · [MIT](LICENSE) · [版本记录](docs/CHANGELOG.md)
 
 ![截图编辑与原位文字选择](docs/images/editor.png)
 

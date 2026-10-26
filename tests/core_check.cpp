@@ -209,9 +209,35 @@ private slots:
         QVERIFY(controller.configured(AiClient::Translate));
         QVERIFY(!controller.configured(AiClient::Ocr));
         QVERIFY(!controller.configured(AiClient::Describe));
-        document.clearText();
+        document.setTextBlocks({ });
         settings.localOcr = true;
         QVERIFY(controller.configured(AiClient::Translate));
+    }
+    void settingsInvalidateRelatedResults()
+    {
+        Document document;
+        Settings settings;
+        RecognitionController controller(document, settings);
+        const QList<TextBlock> blocks { { QRectF(.1, .1, .5, .1), "original", "translation" } };
+        document.setTextBlocks(blocks, true);
+        document.setDescription("description");
+        auto before = settings;
+        settings.rapidLanguage = "french";
+        controller.settingsChanged(before);
+        QVERIFY(document.textBlocks().isEmpty());
+        QCOMPARE(document.description(), QString("description"));
+        document.setTextBlocks(blocks, true);
+        before = settings;
+        settings.api.describePrompt += " extra";
+        controller.settingsChanged(before);
+        QVERIFY(document.description().isEmpty());
+        QCOMPARE(document.readableText(), QString("translation"));
+        document.setDescription("description");
+        before = settings;
+        settings.api.baseUrl = "http://127.0.0.1:1/v1";
+        controller.settingsChanged(before);
+        QVERIFY(document.description().isEmpty());
+        QCOMPARE(document.readableText(), QString("original"));
     }
     void coordinatesRecoverWithoutLosingText()
     {

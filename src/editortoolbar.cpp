@@ -12,7 +12,6 @@
 #include <QSlider>
 #include <QSpinBox>
 #include <QToolButton>
-#include <algorithm>
 #include <functional>
 namespace
 {
@@ -144,8 +143,7 @@ EditorToolbar::EditorToolbar(Document* document, QWidget* overlay)
     translated->setCheckable(true);
     const auto syncReading = [this, original, translated, copy] {
         const bool hasText = !doc->textBlocks().isEmpty();
-        const bool hasTranslation = std::any_of(doc->textBlocks().begin(), doc->textBlocks().end(),
-            [](const TextBlock& b) { return !b.translation.isEmpty(); });
+        const bool hasTranslation = doc->hasTranslation();
         original->setEnabled(hasText);
         translated->setEnabled(hasTranslation);
         copy->setEnabled(hasText);

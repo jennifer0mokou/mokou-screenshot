@@ -23,7 +23,7 @@ if pgrep -u "$(id -u)" -x "${process_name:0:15}" >/dev/null; then
   exit 1
 fi
 cmake -S "$root" -B "$root/build" -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX="$prefix"
-cmake --build "$root/build" --parallel 4
+cmake --build "$root/build" --target mokou-screenshot --parallel 4
 if "$with_ocr"; then "$root/scripts/install-ocr.sh"; fi
 cmake --install "$root/build"
 mkdir -p "$config_root/autostart"

@@ -115,36 +115,32 @@ QImage Document::crop() const
         return { };
     return rendered().copy(pixels);
 }
-void Document::addMark(const Mark& m)
+void Document::invalidateContent()
 {
     ++revision;
     ++contentRevision;
-    marks.append(m);
-    undone.clear();
     clearResultData();
     emit resultsChanged();
     emit changed();
 }
+void Document::addMark(const Mark& m)
+{
+    marks.append(m);
+    undone.clear();
+    invalidateContent();
+}
 void Document::undo()
 {
     if (!marks.isEmpty()) {
-        ++revision;
-        ++contentRevision;
         undone.append(marks.takeLast());
-        clearResultData();
-        emit resultsChanged();
-        emit changed();
+        invalidateContent();
     }
 }
 void Document::redo()
 {
     if (!undone.isEmpty()) {
-        ++revision;
-        ++contentRevision;
         marks.append(undone.takeLast());
-        clearResultData();
-        emit resultsChanged();
-        emit changed();
+        invalidateContent();
     }
 }
 void Document::clearResultData()
@@ -154,17 +150,16 @@ void Document::clearResultData()
     textRegion = { };
     showTranslation = false;
 }
-void Document::clearText()
+bool Document::hasTranslation() const
 {
-    clearResultData();
-    emit resultsChanged();
-    emit changed();
+    return std::any_of(
+        blocks.begin(), blocks.end(), [](const TextBlock& block) { return !block.translation.isEmpty(); });
 }
 void Document::setTextBlocks(const QList<TextBlock>& value, bool translated)
 {
     blocks = value;
-    textRegion = selection;
-    showTranslation = translated;
+    textRegion = blocks.isEmpty() ? QRectF() : selection;
+    showTranslation = translated && hasTranslation();
     tool = blocks.isEmpty() ? Select : ReadText;
     emit resultsChanged();
     emit changed();
@@ -183,6 +178,8 @@ void Document::clearDescription()
 }
 void Document::clearTranslations()
 {
+    if (!hasTranslation())
+        return;
     for (auto& block : blocks)
         block.translation.clear();
     showTranslation = false;
@@ -191,9 +188,7 @@ void Document::clearTranslations()
 }
 void Document::setTranslationVisible(bool translated)
 {
-    if (translated && std::none_of(blocks.begin(), blocks.end(), [](const TextBlock& block) {
-            return !block.translation.isEmpty();
-        }))
+    if (translated && !hasTranslation())
         return;
     showTranslation = translated;
     tool = ReadText;

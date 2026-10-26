@@ -49,10 +49,10 @@ Application 只协调窗口与会话；RecognitionController 协调识别业务�
 
 | 所有者 | 状态与规则 |
 | --- | --- |
-| Document | 内容／选区改变增加 revision 并清除识别结果；工具与样式不增加 revision |
+| Document | 内容／选区改变增加 revision 并清除结果；新增标注与撤销／重做共用失效通知 |
 | Document | 识别数据私有，通过 setTextBlocks／setDescription／clearTranslations 等更新 |
 | Document | resultsChanged 同步阅读层和识图卡片；changed 刷新一般界面，每次编辑一次 |
-| RecognitionController | 记录请求 revision；内容变化、模态操作或关闭会话时取消 |
+| RecognitionController | 记录请求 revision；内容变化、模态操作或关闭会话时取消；设置按 OCR／译文／描述分别失效 |
 | Application | editorGeneration 隔离旧窗口；recordingRequest 隔离延迟启动 |
 | Application | 进入设置／拼图先取消待启动录屏，再进入模态事件循环 |
 | Capture | 独立请求代号、超时、文件描述符；迟到回调不进入新请求 |

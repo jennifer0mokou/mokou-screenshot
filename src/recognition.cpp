@@ -114,22 +114,17 @@ void RecognitionController::settingsChanged(const Settings& before)
     cancel();
     const auto& old = before.api;
     const auto& now = settings.api;
+    const bool apiChanged
+        = old.baseUrl != now.baseUrl || old.model != now.model || old.systemPrompt != now.systemPrompt;
+    const bool languageChanged = before.targetLanguage != settings.targetLanguage;
     const bool ocrChanged = before.localOcr != settings.localOcr
         || before.rapidLanguage != settings.rapidLanguage
-        || (!settings.localOcr
-            && (old.baseUrl != now.baseUrl || old.model != now.model || old.ocrPrompt != now.ocrPrompt
-                || old.systemPrompt != now.systemPrompt));
-    if (ocrChanged) {
-        document.clearText();
-        document.setTool(Document::Select);
-        return;
-    }
-    if (before.targetLanguage != settings.targetLanguage || old.translationModel != now.translationModel
-        || old.baseUrl != now.baseUrl || old.model != now.model || old.systemPrompt != now.systemPrompt
+        || (!settings.localOcr && (apiChanged || old.ocrPrompt != now.ocrPrompt));
+    if (ocrChanged)
+        document.setTextBlocks({ });
+    else if (languageChanged || apiChanged || old.translationModel != now.translationModel
         || old.translationPrompt != now.translationPrompt)
         document.clearTranslations();
-    if (before.targetLanguage != settings.targetLanguage || old.baseUrl != now.baseUrl
-        || old.model != now.model || old.systemPrompt != now.systemPrompt
-        || old.describePrompt != now.describePrompt)
+    if (languageChanged || apiChanged || old.describePrompt != now.describePrompt)
         document.clearDescription();
 }

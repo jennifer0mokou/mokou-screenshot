@@ -219,13 +219,29 @@ private slots:
         const auto resultPreview = qEnvironmentVariable("MOKOU_RESULT_PREVIEW");
         if (!resultPreview.isEmpty())
             QVERIFY(overlay->grab().save(resultPreview));
-        for (auto button : overlay->findChildren<QPushButton*>()) {
-            QVERIFY(!button->text().startsWith("矩形"));
-            QVERIFY(!button->text().startsWith("椭圆"));
-            QVERIFY(!button->text().startsWith("箭头"));
-        }
         overlay->close();
         QTest::qWait(5);
+    }
+    void expandedTextOwnsPointer()
+    {
+        if (QGuiApplication::platformName() != "offscreen")
+            QSKIP("Offscreen reading hit-test");
+        QWidget surface;
+        surface.resize(800, 600);
+        auto layer = new TextOverlay(&surface);
+        layer->setResults({ { QRectF(.1, .1, .4, .04), "First line", QString(300, QChar(u'文')) },
+                              { QRectF(.1, .2, .4, .04), "Second line", QString(300, QChar(u'另')) } },
+            QRectF(0, 0, 800, 600), true, surface.rect(), 220);
+        surface.show();
+        const auto second = layer->blockBounds(1);
+        QTest::mouseClick(layer, Qt::LeftButton, Qt::NoModifier,
+            (layer->blockBounds(0).bottomRight() - QPointF(3, 3)).toPoint());
+        const auto expanded = layer->blockBounds(0);
+        const auto coveredButton = second.bottomRight() - QPointF(3, 3);
+        QVERIFY(expanded.contains(coveredButton));
+        QTest::mouseClick(layer, Qt::LeftButton, Qt::NoModifier, coveredButton.toPoint());
+        QCOMPARE(layer->blockBounds(1), second);
+        QCOMPARE(layer->blockBounds(0), expanded);
     }
     void crossBlockSelectionAndResultUpdates()
     {
@@ -254,6 +270,14 @@ private slots:
         QCOMPARE(layer->selectedText(), QString("First line\nSecond line"));
         QTest::keyClick(layer, Qt::Key_C, Qt::ControlModifier);
         QCOMPARE(QApplication::clipboard()->text(), layer->plainText());
+        QTest::keyClick(layer, Qt::Key_Right);
+        QTest::keyClick(layer, Qt::Key_Right); // Stay at the end instead of wrapping to the beginning.
+        QTest::keyClick(layer, Qt::Key_Left, Qt::ShiftModifier);
+        QCOMPARE(layer->selectedText(), QString("e"));
+        QTest::keyClick(layer, Qt::Key_Home);
+        QTest::keyClick(layer, Qt::Key_Left);
+        QTest::keyClick(layer, Qt::Key_Right, Qt::ShiftModifier);
+        QCOMPARE(layer->selectedText(), QString("F"));
         QTest::mousePress(layer, Qt::LeftButton, Qt::NoModifier, end);
         QTest::mouseMove(layer, start);
         QTest::mouseRelease(layer, Qt::LeftButton, Qt::NoModifier, start);

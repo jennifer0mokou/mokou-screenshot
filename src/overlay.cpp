@@ -18,7 +18,6 @@
 #include <QScrollBar>
 #include <QShortcut>
 #include <QWindow>
-#include <algorithm>
 #include <functional>
 namespace
 {

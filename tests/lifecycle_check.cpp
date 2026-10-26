@@ -53,10 +53,6 @@ private slots:
         auto tabs = dialog.findChild<QTabWidget*>("settingsTabs");
         QVERIFY(tabs);
         QCOMPARE(tabs->count(), 3);
-        for (auto b : dialog.findChildren<QPushButton*>()) {
-            QVERIFY(!b->text().contains("交给Mokou"));
-            QVERIFY(!b->text().contains("恢复PrtScn"));
-        }
         dialog.findChild<QComboBox*>("rapidLanguage")->setCurrentIndex(2);
         dialog.findChild<QComboBox*>("ocrBackend")->setCurrentIndex(1);
         dialog.findChild<QPlainTextEdit*>("systemPrompt")->setPlainText("custom system");

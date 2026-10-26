@@ -73,13 +73,13 @@ public:
     {
         return showTranslation;
     }
+    bool hasTranslation() const;
     QString readableText() const;
     void setTextBlocks(const QList<TextBlock>& value, bool translated = false);
     void setDescription(const QString& value);
     void setTranslationVisible(bool translated);
     void clearTranslations();
     void clearDescription();
-    void clearText();
     void setSelection(const QRectF& rect);
     void setTool(Tool value);
     static QImage stitch(
@@ -91,6 +91,7 @@ private:
     QString descriptionText;
     bool showTranslation = false;
     void clearResultData();
+    void invalidateContent();
     QImage image;
     QList<Mark> marks, undone;
     quint64 contentRevision = 0;

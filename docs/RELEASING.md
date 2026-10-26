@@ -1,33 +1,18 @@
 # 发布
 
-## 版本与构建
-
-版本只改 CMakeLists.txt 的 project VERSION，同步 README、CHANGELOG 和 VERIFICATION。首次公开发布使用 v0.4.2。
+1. 更新 CMakeLists.txt 的 project VERSION，同步 README、CHANGELOG 和 VERIFICATION。
+2. 按 [开发说明](DEVELOPMENT.md) 构建并运行 ctest；桌面与模型检查按改动范围选择。
+3. 检查暂存内容后提交，用 Git 的已提交树生成源码包。
 
 ```bash
-cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
-cmake --build build --parallel 4
-ctest --test-dir build --output-on-failure
+version=0.4.3
+mkdir -p dist
+git archive --format=tar.gz --prefix="mokou-screenshot-$version/" \
+  -o "dist/mokou-screenshot-$version.tar.gz" HEAD
+(cd dist && sha256sum "mokou-screenshot-$version.tar.gz" > SHA256SUMS)
 DESTDIR="$PWD/.artifacts/stage" cmake --install build
 ```
 
-CI 在 Fedora 44 容器运行相同构建与检查，不获取用户配置或模型。真实 Wayland／录屏和模型验证按 [开发说明](DEVELOPMENT.md) 在桌面上进行。
+目标仓库为 jennifer0mokou/mokou-screenshot。推送 main 后查看 Fedora CI 结果，再创建 v版本号 标签及 Release，附源码包、SHA256SUMS 和对应 CHANGELOG。
 
-## 源码包
-
-使用 Git 已提交的树打包，自然排除构建、模型、虚拟环境、截图、配置和本地开发记录：
-
-```bash
-mkdir -p dist
-git archive --format=tar.gz --prefix=mokou-screenshot-0.4.2/ \
-  -o dist/mokou-screenshot-0.4.2.tar.gz HEAD
-(cd dist && sha256sum mokou-screenshot-0.4.2.tar.gz > SHA256SUMS)
-```
-
-仓库包含安装脚本、检查、文档、自有图标与合成界面示例。模型通过带 SHA256 的安装流程取得，不随 Git 或源码包分发。
-
-## GitHub
-
-GitHub 仓库为 `jennifer0mokou/mokou-screenshot`，使用 origin 推送 main。GitHub Actions 完成后，再创建 v0.4.2 标签与 Release，附源码包和 SHA256SUMS；发布说明取自 CHANGELOG 的对应版本。
-
-当前只准备源码发行。二进制包需要另行确定 Fedora／架构目标，包含相应第三方许可并验证安装及桌面权限，不把当前机器的构建目录直接上传。
+源码包包含代码、检查、文档、许可和合成界面图；环境与模型由安装流程获取。当前发布源码，二进制发行另行验证目标 Fedora／架构、运行依赖和桌面权限。

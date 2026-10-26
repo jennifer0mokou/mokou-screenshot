@@ -16,7 +16,6 @@ public:
     QString selectedText() const;
     QRectF blockBounds(int index) const;
     bool truncated(int index) const;
-    int pixelSize(int index) const;
     void selectAll();
     void setReadingVisible(bool visible);
 
