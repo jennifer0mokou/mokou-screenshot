@@ -21,10 +21,10 @@ ctest --test-dir build --output-on-failure
 
 ```bash
 ./scripts/install.sh
-~/.local/bin/mushroom-shot --background
+~/.local/bin/mokou-screenshot --background
 ```
 
-脚本构建、安装 OCR、注册菜单权限及登录待命入口。`--without-ocr` 跳过 OCR 环境和模型，可稍后独立安装；该模式不需要 uv。真实桌面捕获／录屏使用安装后的二进制；KWin 根据其路径与 desktop 元数据检查权限。默认前缀 `~/.local`，可通过 MUSHROOM_INSTALL_PREFIX 设置绝对路径。桌面 ID `io.github.fedokou.MushroomShot` 为稳定标识，避免更新时改变权限与快捷键归属。
+脚本构建、安装 OCR、注册菜单权限及登录待命入口。`--without-ocr` 跳过 OCR 环境和模型，可稍后独立安装；该模式不需要 uv。真实桌面捕获／录屏使用安装后的二进制；KWin 根据其路径与 desktop 元数据检查权限。默认前缀 `~/.local`，可通过 MOKOU_INSTALL_PREFIX 设置绝对路径。桌面 ID 为 `io.github.fedokou.MokouScreenshot`，程序名为 `mokou-screenshot`。
 
 更新前先退出运行实例。正在编辑或录屏时保留当前会话，完成后再更新。
 
@@ -54,14 +54,14 @@ ctest --test-dir build --output-on-failure
 
 ```bash
 # 真实模型：清晰合成文本，记录耗时与结果数量
-MUSHROOM_REAL_OCR=1 \
-MUSHROOM_OCR_DIR="$HOME/.local/share/mushroom-shot/ocr" \
+MOKOU_REAL_OCR=1 \
+MOKOU_OCR_DIR="$HOME/.local/share/mokou-screenshot/ocr" \
   ./build/ocr-check -platform offscreen
 
 # 真实 Wayland：合成覆盖层，结束恢复剪切板
 mkdir -p .artifacts
-MUSHROOM_NATIVE_CHECK=1 \
-MUSHROOM_PREVIEW="$PWD/.artifacts/native-editor.png" \
+MOKOU_NATIVE_CHECK=1 \
+MOKOU_PREVIEW="$PWD/.artifacts/native-editor.png" \
   ./build/editor-check -platform wayland
 ```
 
@@ -69,8 +69,8 @@ MUSHROOM_PREVIEW="$PWD/.artifacts/native-editor.png" \
 
 ```bash
 mkdir -p .artifacts
-~/.local/bin/mushroom-shot --capture-check "$PWD/.artifacts/desktop.png"
-~/.local/bin/mushroom-shot --record-check "$PWD/.artifacts"
+~/.local/bin/mokou-screenshot --capture-check "$PWD/.artifacts/desktop.png"
+~/.local/bin/mokou-screenshot --record-check "$PWD/.artifacts"
 ```
 
 录屏诊断约两秒，可追加 --check-audio、--check-webm、--check-cancel-start。结果用 ffprobe 检查。检查通过后继续交付，不对未改动路径反复全量测试。
@@ -83,8 +83,8 @@ C++ 使用 .clang-format。生成协议代码只在 build 中。版本只改 CMa
 
 ## 配置、卸载与故障数据
 
-配置默认 `~/.config/fedokou/MushroomShot.conf`，支持 XDG_CONFIG_HOME。Key 不序列化。文字字体／字号／颜色、阅读背景与取色倍率从工具栏调整并保存。画笔样式用于当前编辑。
+配置默认 `~/.config/fedokou/MokouScreenshot.conf`，支持 XDG_CONFIG_HOME。Key 不序列化。文字字体／字号／颜色、阅读背景与取色倍率从工具栏调整并保存。画笔样式用于当前编辑。
 
 退出后运行 `./scripts/uninstall.sh`。它移除主程序、菜单、图标和自动启动项，保留用户数据及 OCR 环境。PrtScn 在 KDE 快捷键设置中管理。
 
-录屏失败的数据保存在录屏目录的 `.mushroom-随机字符/`。本地 OCR 可用 `./scripts/install-ocr.sh` 单独修复；模型和 worker 详见 [OCR](OCR.md)。
+录屏失败的数据保存在录屏目录的 `.mokou-随机字符/`。本地 OCR 可用 `./scripts/install-ocr.sh` 单独修复；模型和 worker 详见 [OCR](OCR.md)。

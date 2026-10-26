@@ -1,10 +1,10 @@
 [Desktop Entry]
 Type=Application
-Name=蘑菇截图
+Name=Mokou Screenshot
 GenericName=截图、标注与录屏
 Comment=框选、编辑、复制，在 Fedora KDE 上自然完成
-Exec="@CMAKE_INSTALL_PREFIX@/bin/mushroom-shot" --capture
-Icon=mushroom-shot
+Exec="@CMAKE_INSTALL_PREFIX@/bin/mokou-screenshot" --capture
+Icon=mokou-screenshot
 Terminal=false
 Categories=Utility;Qt;KDE;
 StartupNotify=false
@@ -14,8 +14,8 @@ Actions=Capture;Settings;
 
 [Desktop Action Capture]
 Name=区域截图
-Exec="@CMAKE_INSTALL_PREFIX@/bin/mushroom-shot" --capture
+Exec="@CMAKE_INSTALL_PREFIX@/bin/mokou-screenshot" --capture
 
 [Desktop Action Settings]
 Name=设置
-Exec="@CMAKE_INSTALL_PREFIX@/bin/mushroom-shot" --settings
+Exec="@CMAKE_INSTALL_PREFIX@/bin/mokou-screenshot" --settings

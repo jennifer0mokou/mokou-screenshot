@@ -13,7 +13,7 @@ class OcrCheck : public QObject
     void runtime(const QString& root, const QByteArray& script)
     {
         QVERIFY(QDir().mkpath(root + "/venv/bin"));
-        QVERIFY(QFile::link(QString::fromUtf8(MUSHROOM_TEST_PYTHON), root + "/venv/bin/python"));
+        QVERIFY(QFile::link(QString::fromUtf8(MOKOU_TEST_PYTHON), root + "/venv/bin/python"));
         QFile file(root + "/worker.py");
         QVERIFY(file.open(QIODevice::WriteOnly));
         QVERIFY(file.write(script) > 0);
@@ -27,7 +27,7 @@ class OcrCheck : public QObject
         font.setPixelSize(32);
         painter.setFont(font);
         painter.setPen(Qt::black);
-        painter.drawText(QPoint(30, 80), "蘑菇截图：快速识别文字");
+        painter.drawText(QPoint(30, 80), "本地截图：快速识别文字");
         painter.drawText(QPoint(30, 160), "Hello world, local OCR 2026");
         painter.drawText(QPoint(30, 240), "こんにちは、日本語のテスト");
         return result;
@@ -83,7 +83,7 @@ private slots:
     }
     void realLanguage()
     {
-        if (!qEnvironmentVariableIsSet("MUSHROOM_REAL_OCR"))
+        if (!qEnvironmentVariableIsSet("MOKOU_REAL_OCR"))
             QSKIP("Opt-in local model integration");
         QFETCH(QString, language);
         QFETCH(QString, text);
@@ -113,7 +113,7 @@ private slots:
     }
     void realMultilingual()
     {
-        if (!qEnvironmentVariableIsSet("MUSHROOM_REAL_OCR"))
+        if (!qEnvironmentVariableIsSet("MOKOU_REAL_OCR"))
             QSKIP("Opt-in local model integration");
         OcrClient client;
         QSignalSpy ready(&client, &OcrClient::textReady), failed(&client, &OcrClient::failed);
@@ -126,14 +126,14 @@ private slots:
             QString text;
             for (const auto& block : blocks)
                 text += block.source;
-            QVERIFY(text.contains("蘑菇截图"));
+            QVERIFY(text.contains("本地截图"));
             QVERIFY(text.contains("Hello world"));
             QVERIFY(text.contains("こんにちは"));
             for (const auto& block : blocks) {
                 QVERIFY(block.box.left() >= 0 && block.box.top() >= 0);
                 QVERIFY(block.box.right() <= 1.001 && block.box.bottom() <= 1.001);
             }
-            const auto preview = qEnvironmentVariable("MUSHROOM_OCR_PREVIEW");
+            const auto preview = qEnvironmentVariable("MOKOU_OCR_PREVIEW");
             if (i == 2 && !preview.isEmpty()) {
                 Document document;
                 document.reset(sample, sample.size());

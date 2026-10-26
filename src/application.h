@@ -15,7 +15,7 @@ class QScreen;
 class Application : public QObject
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "io.github.fedokou.MushroomShot")
+    Q_CLASSINFO("D-Bus Interface", "io.github.fedokou.MokouScreenshot")
 public:
     explicit Application(QObject* parent = nullptr);
     ~Application() override;

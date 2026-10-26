@@ -2,7 +2,7 @@
 
 ## 结构
 
-C++20／Qt 6 Widgets 主进程负责桌面交互，按需启动 Python OCR worker。系统 Qt／KDE／FFmpeg 提供桌面与媒体能力。生产代码编入内部静态库 mushroom-core，应用与检查链接同一实现。
+C++20／Qt 6 Widgets 主进程负责桌面交互，按需启动 Python OCR worker。系统 Qt／KDE／FFmpeg 提供桌面与媒体能力。生产代码编入内部静态库 mokou-core，应用与检查链接同一实现。
 
 | 模块 | 责任 |
 | --- | --- |

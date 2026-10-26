@@ -16,10 +16,10 @@
 #include <QUrl>
 namespace
 {
-const QString service = "io.github.fedokou.MushroomShot";
+const QString service = "io.github.fedokou.MokouScreenshot";
 QIcon recordingIcon(const QColor& color)
 {
-    QPixmap icon = QIcon(":/mushroom-shot.svg").pixmap(64, 64);
+    QPixmap icon = QIcon(":/mokou-screenshot.svg").pixmap(64, 64);
     QPainter painter(&icon);
     painter.setPen(QPen(Qt::white, 2));
     painter.setBrush(color);
@@ -41,21 +41,21 @@ Application::Application(QObject* parent)
 {
     auto bus = QDBusConnection::sessionBus();
     bus.registerObject("/", this, QDBusConnection::ExportScriptableSlots);
-    tray.setIcon(QIcon(":/mushroom-shot.svg"));
-    tray.setToolTip("蘑菇截图 · PrtScn");
+    tray.setIcon(QIcon(":/mokou-screenshot.svg"));
+    tray.setToolTip("Mokou Screenshot · PrtScn");
     trayMenu = std::make_unique<QMenu>();
     auto menu = trayMenu.get();
     captureAction = menu->addAction("区域截图");
     captureAction->setObjectName("capture");
     captureAction->setProperty("componentName", service);
-    captureAction->setProperty("componentDisplayName", "蘑菇截图");
+    captureAction->setProperty("componentDisplayName", "Mokou Screenshot");
     connect(captureAction, &QAction::triggered, this, &Application::Capture);
     const auto registerShortcuts = [this] {
         QString error;
         if (!registerPrintShortcut(captureAction, &error))
-            tray.setToolTip("蘑菇截图 · " + error);
+            tray.setToolTip("Mokou Screenshot · " + error);
         else
-            tray.setToolTip("蘑菇截图 · PrtScn");
+            tray.setToolTip("Mokou Screenshot · PrtScn");
     };
     auto shortcutWatcher = new QDBusServiceWatcher(
         "org.kde.kglobalaccel", bus, QDBusServiceWatcher::WatchForRegistration, this);
@@ -92,7 +92,7 @@ Application::Application(QObject* parent)
     });
     connect(&recordingClock, &QTimer::timeout, this, [this] {
         const auto seconds = elapsed.elapsed() / 1000;
-        tray.setToolTip(QString("蘑菇截图 · 正在录屏 %1:%2 · 再按截图快捷键停止")
+        tray.setToolTip(QString("Mokou Screenshot · 正在录屏 %1:%2 · 再按截图快捷键停止")
                 .arg(seconds / 60, 2, 10, QChar('0'))
                 .arg(seconds % 60, 2, 10, QChar('0')));
     });
@@ -108,13 +108,13 @@ Application::Application(QObject* parent)
         tray.setIcon(recordingIcon(QColor("#ff4560")));
         recordingClock.start(500);
         stopAction->setEnabled(true);
-        tray.setToolTip("蘑菇截图 · 正在录屏，再按截图快捷键停止");
+        tray.setToolTip("Mokou Screenshot · 正在录屏，再按截图快捷键停止");
     });
     connect(&recorder, &Recorder::canceled, this, [this] {
         recordingClock.stop();
         stopAction->setEnabled(false);
-        tray.setIcon(QIcon(":/mushroom-shot.svg"));
-        tray.setToolTip("蘑菇截图");
+        tray.setIcon(QIcon(":/mokou-screenshot.svg"));
+        tray.setToolTip("Mokou Screenshot");
         if (quitting)
             qApp->quit();
         else
@@ -124,21 +124,21 @@ Application::Application(QObject* parent)
         recordingClock.stop();
         stopAction->setEnabled(false);
         tray.setIcon(recordingIcon(QColor("#e8b35e")));
-        tray.setToolTip("蘑菇截图 · 已停止录制，正在保存文件");
+        tray.setToolTip("Mokou Screenshot · 已停止录制，正在保存文件");
     });
     connect(&recorder, &Recorder::saved, this, [this](const QString& path) {
         recordingClock.stop();
-        tray.setIcon(QIcon(":/mushroom-shot.svg"));
-        tray.setToolTip("蘑菇截图");
+        tray.setIcon(QIcon(":/mokou-screenshot.svg"));
+        tray.setToolTip("Mokou Screenshot");
         announce("录屏已保存：" + path);
         if (quitting)
             qApp->quit();
     });
     connect(&recorder, &Recorder::failed, this, [this](const QString& s) {
         recordingClock.stop();
-        tray.setIcon(QIcon(":/mushroom-shot.svg"));
+        tray.setIcon(QIcon(":/mokou-screenshot.svg"));
         stopAction->setEnabled(false);
-        tray.setToolTip("蘑菇截图");
+        tray.setToolTip("Mokou Screenshot");
         announce(s, true);
         if (quitting)
             qApp->quit();
@@ -224,10 +224,10 @@ void Application::setEditorStatus(const QString& s)
 }
 void Application::announce(const QString& text, bool error)
 {
-    tray.showMessage("蘑菇截图", text, error ? QSystemTrayIcon::Warning : QSystemTrayIcon::Information, 5000);
+    tray.showMessage("Mokou Screenshot", text, error ? QSystemTrayIcon::Warning : QSystemTrayIcon::Information, 5000);
     if (error && overlays.isEmpty() && !quitting && !modalOpen) {
         modalOpen = true;
-        QMessageBox::warning(nullptr, "蘑菇截图", text);
+        QMessageBox::warning(nullptr, "Mokou Screenshot", text);
         modalOpen = false;
     }
 }
@@ -377,7 +377,7 @@ void Application::demo()
     font.setPixelSize(48);
     font.setBold(true);
     p.setFont(font);
-    p.drawText(QPoint(120, 170), "蘑菇截图");
+    p.drawText(QPoint(120, 170), "Mokou Screenshot");
     font.setPixelSize(24);
     font.setBold(false);
     p.setFont(font);

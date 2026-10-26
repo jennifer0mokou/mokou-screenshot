@@ -12,7 +12,7 @@ class AudioCheck : public QObject
         QFile file(path);
         if (!file.open(QIODevice::WriteOnly))
             return false;
-        if (file.write("#!" + QByteArray(MUSHROOM_TEST_PYTHON) + "\n" + body) < 0)
+        if (file.write("#!" + QByteArray(MOKOU_TEST_PYTHON) + "\n" + body) < 0)
             return false;
         file.close();
         return file.setPermissions(QFile::ReadOwner | QFile::WriteOwner | QFile::ExeOwner | QFile::ReadGroup

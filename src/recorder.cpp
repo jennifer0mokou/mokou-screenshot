@@ -151,7 +151,7 @@ void Recorder::start(const QRect& region, const Settings& s, bool sys, bool mic)
     }
     format = mp4 ? "mp4" : "webm";
     output = uniqueOutputPath(s.videoDirectory, format);
-    temporary = std::make_unique<QTemporaryDir>(s.videoDirectory + "/.mushroom-XXXXXX");
+    temporary = std::make_unique<QTemporaryDir>(s.videoDirectory + "/.mokou-XXXXXX");
     if (!temporary->isValid()) {
         video.reset();
         temporary.reset();

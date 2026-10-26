@@ -31,7 +31,7 @@ Settings::Settings()
         rapidLanguage = "multi";
     api.translationModel = s.value("api/translationModel").toString();
     localOcr = s.value("ocr/local", true).toBool();
-    api.key = qEnvironmentVariable("MUSHROOM_API_KEY");
+    api.key = qEnvironmentVariable("MOKOU_API_KEY");
     targetLanguage = s.value("api/targetLanguage", targetLanguage).toString();
     videoFormat = s.value("recording/format", videoFormat).toString();
     frameRate = qBound(5, s.value("recording/fps", frameRate).toInt(), 60);
@@ -68,6 +68,6 @@ bool Settings::save(QString* error) const
 }
 QString uniqueOutputPath(const QString& directory, const QString& extension)
 {
-    return QDir(directory).filePath("蘑菇_" + QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_zzz")
+    return QDir(directory).filePath("mokou_" + QDateTime::currentDateTime().toString("yyyyMMdd_HHmmss_zzz")
         + "_" + QUuid::createUuid().toString(QUuid::Id128).left(6) + "." + extension);
 }

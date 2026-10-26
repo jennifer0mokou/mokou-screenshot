@@ -158,7 +158,7 @@ private slots:
         QVERIFY(input->width() > shortWidth);
         QVERIFY(input->width() < 300);
         QVERIFY(document.selection.contains(input->geometry()));
-        const auto preview = qEnvironmentVariable("MUSHROOM_INPUT_PREVIEW");
+        const auto preview = qEnvironmentVariable("MOKOU_INPUT_PREVIEW");
         if (!preview.isEmpty())
             QVERIFY(overlay->grab().save(preview));
         const auto baseline = input->baseline();
@@ -198,7 +198,7 @@ private slots:
         QVERIFY(layer->blockBounds(0).height() <= 18);
         QVERIFY(!layer->blockBounds(0).intersects(layer->blockBounds(1)));
         QCOMPARE(layer->findChildren<QScrollBar*>().size(), 0);
-        const auto layoutPreview = qEnvironmentVariable("MUSHROOM_LAYOUT_PREVIEW");
+        const auto layoutPreview = qEnvironmentVariable("MOKOU_LAYOUT_PREVIEW");
         if (!layoutPreview.isEmpty())
             QVERIFY(overlay->grab().save(layoutPreview));
         const auto more = layer->blockBounds(0).bottomRight() - QPointF(3, 3);
@@ -216,7 +216,7 @@ private slots:
         QVERIFY(!panel->isWindow());
         auto viewport = overlay->findChild<QScrollArea*>("toolbarViewport");
         QVERIFY(!panel->geometry().intersects(viewport->geometry()));
-        const auto resultPreview = qEnvironmentVariable("MUSHROOM_RESULT_PREVIEW");
+        const auto resultPreview = qEnvironmentVariable("MOKOU_RESULT_PREVIEW");
         if (!resultPreview.isEmpty())
             QVERIFY(overlay->grab().save(resultPreview));
         for (auto button : overlay->findChildren<QPushButton*>()) {
@@ -368,7 +368,7 @@ private slots:
     }
     void selectAdjustAnnotateAndRead()
     {
-        const bool native = qEnvironmentVariableIsSet("MUSHROOM_NATIVE_CHECK");
+        const bool native = qEnvironmentVariableIsSet("MOKOU_NATIVE_CHECK");
         auto oldClipboard = std::make_unique<QMimeData>();
         if (native) {
             const auto old = QApplication::clipboard()->mimeData();
@@ -389,7 +389,7 @@ private slots:
         QFont f = p.font();
         f.setPixelSize(44);
         p.setFont(f);
-        p.drawText(QPoint(160, 270), "蘑菇截图 · 框住这一刻");
+        p.drawText(QPoint(160, 270), "Mokou Screenshot · 框住这一刻");
         f.setPixelSize(24);
         p.setFont(f);
         p.drawText(QPoint(160, 330), "Capture. Annotate. Make it yours.");
@@ -438,7 +438,7 @@ private slots:
         QTest::mouseRelease(overlay, Qt::LeftButton, Qt::NoModifier, QPoint(800, 480));
         QCOMPARE(document.markCount(), 2);
         QVERIFY(document.rendered() != beforeMosaic);
-        const auto mosaicPreview = qEnvironmentVariable("MUSHROOM_MOSAIC_PREVIEW");
+        const auto mosaicPreview = qEnvironmentVariable("MOKOU_MOSAIC_PREVIEW");
         if (!mosaicPreview.isEmpty())
             QVERIFY(overlay->grab().save(mosaicPreview));
         document.undo();
@@ -448,7 +448,7 @@ private slots:
         auto annotation = overlay->findChild<AnnotationInput*>();
         QVERIFY(annotation);
         annotation->setText("文字标注");
-        const auto annotationPreview = qEnvironmentVariable("MUSHROOM_NATIVE_INPUT_PREVIEW");
+        const auto annotationPreview = qEnvironmentVariable("MOKOU_NATIVE_INPUT_PREVIEW");
         if (!annotationPreview.isEmpty())
             QVERIFY(overlay->grab().save(annotationPreview));
         QTest::keyClick(annotation, Qt::Key_Return);
@@ -469,7 +469,7 @@ private slots:
         QCOMPARE(texts->selectedText(), texts->plainText());
         QTest::keyClick(texts, Qt::Key_C, Qt::ControlModifier);
         QCOMPARE(QApplication::clipboard()->text(), texts->plainText());
-        const auto preview = qEnvironmentVariable("MUSHROOM_PREVIEW");
+        const auto preview = qEnvironmentVariable("MOKOU_PREVIEW");
         if (!preview.isEmpty()) {
             QDir().mkpath(QFileInfo(preview).absolutePath());
             QVERIFY(overlay->grab().save(preview));
@@ -479,15 +479,14 @@ private slots:
         QVERIFY(options->isVisible());
         auto family = options->findChild<QFontComboBox*>();
         family->showPopup();
-        QTest::qWait(10);
+        QTRY_VERIFY_WITH_TIMEOUT(QApplication::activePopupWidget(), 1000);
         auto fontPopup = QApplication::activePopupWidget();
-        QVERIFY(fontPopup);
         QTest::keyClick(fontPopup, Qt::Key_Escape);
         QVERIFY(!QApplication::activePopupWidget());
         QVERIFY(options->isVisible());
         options->findChild<QSpinBox*>("textSize")->setValue(30);
         QCOMPARE(document.textFont.pixelSize(), 30);
-        const auto optionsPreview = qEnvironmentVariable("MUSHROOM_OPTIONS_PREVIEW");
+        const auto optionsPreview = qEnvironmentVariable("MOKOU_OPTIONS_PREVIEW");
         if (!optionsPreview.isEmpty())
             QVERIFY(overlay->grab().save(optionsPreview));
         QTest::keyClick(options->findChild<QSpinBox*>("textSize"), Qt::Key_Escape);
@@ -499,13 +498,13 @@ private slots:
         QTest::keyClick(zoom, Qt::Key_Escape);
         document.setTool(Document::Picker);
         QTest::mouseMove(overlay, QPoint(1050, 500));
-        const auto pickerPreview = qEnvironmentVariable("MUSHROOM_PICKER_PREVIEW");
+        const auto pickerPreview = qEnvironmentVariable("MOKOU_PICKER_PREVIEW");
         if (!pickerPreview.isEmpty())
             QVERIFY(overlay->grab().save(pickerPreview));
         document.setDescription("这是截图内的识图结果示例，可选择和复制。 ");
         auto panel = overlay->findChild<ReadingPanel*>();
         QVERIFY(panel->isVisible());
-        const auto readingPreview = qEnvironmentVariable("MUSHROOM_READING_PREVIEW");
+        const auto readingPreview = qEnvironmentVariable("MOKOU_READING_PREVIEW");
         if (!readingPreview.isEmpty())
             QVERIFY(overlay->grab().save(readingPreview));
         QTest::keyClick(panel->findChild<QPlainTextEdit*>(), Qt::Key_Escape);

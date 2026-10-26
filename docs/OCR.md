@@ -19,7 +19,7 @@ RapidOCR 3.10.0／ONNX Runtime 1.31.0，CPU 推理：
 ./scripts/install-ocr.sh
 ```
 
-依赖 uv，脚本准备 Python 3.12；默认安装到 `~/.local/share/mushroom-shot/ocr`。
+依赖 uv，脚本准备 Python 3.12；默认安装到 `~/.local/share/mokou-screenshot/ocr`。
 
 | 文件 | 责任 |
 | --- | --- |
@@ -55,8 +55,8 @@ language 为 multi、french、korean 或 russian。成功响应：
 增加语言要同步 Settings 的允许值、设置列表、worker 的路由、模型清单及 ocr-check 实际样本。更改推理参数先用合成文本复核，再按需使用真实样本。
 
 ```bash
-MUSHROOM_REAL_OCR=1 \
-MUSHROOM_OCR_DIR="$HOME/.local/share/mushroom-shot/ocr" \
+MOKOU_REAL_OCR=1 \
+MOKOU_OCR_DIR="$HOME/.local/share/mokou-screenshot/ocr" \
   ./build/ocr-check -platform offscreen
 ```
 

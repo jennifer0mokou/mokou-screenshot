@@ -54,7 +54,7 @@ private slots:
         QVERIFY(tabs);
         QCOMPARE(tabs->count(), 3);
         for (auto b : dialog.findChildren<QPushButton*>()) {
-            QVERIFY(!b->text().contains("交给蘑菇"));
+            QVERIFY(!b->text().contains("交给Mokou"));
             QVERIFY(!b->text().contains("恢复PrtScn"));
         }
         dialog.findChild<QComboBox*>("rapidLanguage")->setCurrentIndex(2);
@@ -66,7 +66,7 @@ private slots:
         QCOMPARE(loaded.rapidLanguage, QString("korean"));
         QVERIFY(!loaded.localOcr);
         QCOMPARE(loaded.api.systemPrompt, QString("custom system"));
-        const auto preview = qEnvironmentVariable("MUSHROOM_SETTINGS_PREVIEW");
+        const auto preview = qEnvironmentVariable("MOKOU_SETTINGS_PREVIEW");
         if (!preview.isEmpty()) {
             SettingsDialog view(loaded);
             view.show();
@@ -92,7 +92,7 @@ private slots:
         QFETCH(bool, unplaced);
         QTemporaryDir directory;
         QVERIFY(QDir().mkpath(directory.path() + "/venv/bin"));
-        QVERIFY(QFile::link(QString::fromUtf8(MUSHROOM_TEST_PYTHON), directory.path() + "/venv/bin/python"));
+        QVERIFY(QFile::link(QString::fromUtf8(MOKOU_TEST_PYTHON), directory.path() + "/venv/bin/python"));
         QFile script(directory.path() + "/worker.py");
         QVERIFY(script.open(QIODevice::WriteOnly));
         QByteArray workerScript(
@@ -102,14 +102,14 @@ private slots:
             workerScript.replace("[.1,.1,.5,.08]", "[10,20,30,40]");
         script.write(workerScript);
         script.close();
-        const auto previous = qgetenv("MUSHROOM_OCR_DIR");
+        const auto previous = qgetenv("MOKOU_OCR_DIR");
         const auto restore = qScopeGuard([&] {
             if (previous.isNull())
-                qunsetenv("MUSHROOM_OCR_DIR");
+                qunsetenv("MOKOU_OCR_DIR");
             else
-                qputenv("MUSHROOM_OCR_DIR", previous);
+                qputenv("MOKOU_OCR_DIR", previous);
         });
-        qputenv("MUSHROOM_OCR_DIR", directory.path().toUtf8());
+        qputenv("MOKOU_OCR_DIR", directory.path().toUtf8());
         QTcpServer server;
         QVERIFY(server.listen(QHostAddress::LocalHost));
         QByteArray incoming;
@@ -288,7 +288,7 @@ int main(int argc, char** argv)
     QApplication app(argc, argv);
     app.setQuitOnLastWindowClosed(false);
     app.setOrganizationName("fedokou");
-    app.setApplicationName("MushroomShot");
+    app.setApplicationName("MokouScreenshot");
     LifecycleCheck checks;
     return QTest::qExec(&checks, argc, argv);
 }

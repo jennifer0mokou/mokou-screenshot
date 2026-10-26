@@ -9,8 +9,8 @@
 OcrClient::OcrClient(QObject* parent, const QString& runtime)
     : QObject(parent)
 {
-    root = runtime.isEmpty() ? qEnvironmentVariable("MUSHROOM_OCR_DIR",
-                                   QCoreApplication::applicationDirPath() + "/../share/mushroom-shot/ocr")
+    root = runtime.isEmpty() ? qEnvironmentVariable("MOKOU_OCR_DIR",
+                                   QCoreApplication::applicationDirPath() + "/../share/mokou-screenshot/ocr")
                              : runtime;
     deadline.setSingleShot(true);
     idle.setSingleShot(true);
@@ -18,7 +18,7 @@ OcrClient::OcrClient(QObject* parent, const QString& runtime)
     connect(&idle, &QTimer::timeout, this, &OcrClient::shutdown);
     worker.setStandardErrorFile(QProcess::nullDevice());
     auto environment = QProcessEnvironment::systemEnvironment();
-    environment.remove("MUSHROOM_API_KEY");
+    environment.remove("MOKOU_API_KEY");
     environment.remove("OPENAI_API_KEY");
     environment.insert("OMP_NUM_THREADS", "4");
     worker.setProcessEnvironment(environment);

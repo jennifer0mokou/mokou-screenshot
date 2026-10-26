@@ -22,7 +22,7 @@
 SettingsDialog::SettingsDialog(Settings& s, QWidget* parent)
     : QDialog(parent)
 {
-    setWindowTitle("蘑菇截图 · 设置");
+    setWindowTitle("Mokou Screenshot · 设置");
     resize(680, 600);
     auto main = new QVBoxLayout(this);
     main->setContentsMargins(20, 18, 20, 16);
@@ -200,7 +200,7 @@ SettingsDialog::SettingsDialog(Settings& s, QWidget* parent)
 CollageDialog::CollageDialog(const QImage& current, QWidget* parent)
     : QDialog(parent)
 {
-    setWindowTitle("蘑菇截图 · 拼成长图");
+    setWindowTitle("Mokou Screenshot · 拼成长图");
     resize(940, 650);
     auto main = new QVBoxLayout(this);
     main->addWidget(new QLabel("添加图片后拖动列表调整顺序。预览缩放显示，保存时使用原始分辨率。"));

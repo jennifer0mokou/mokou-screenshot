@@ -32,7 +32,7 @@ Overlay::Overlay(Document* d, QScreen* screen, bool demo)
     : QWidget(nullptr, Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint)
     , doc(d)
 {
-    setWindowTitle("蘑菇截图 · 框选与编辑");
+    setWindowTitle("Mokou Screenshot · 框选与编辑");
     setObjectName("captureOverlay");
     setMouseTracking(true);
     setCursor(Qt::ArrowCursor);
@@ -49,11 +49,11 @@ Overlay::Overlay(Document* d, QScreen* screen, bool demo)
             | LayerShellQt::Window::AnchorBottom | LayerShellQt::Window::AnchorLeft
             | LayerShellQt::Window::AnchorRight);
         layer->setExclusiveZone(-1);
-        layer->setScope("mushroom-shot-capture");
+        layer->setScope("mokou-screenshot-capture");
         layer->setScreen(screen);
         layer->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityExclusive);
     }
-    hint = new QLabel("蘑菇截图  /  拖动框选 · 选完可继续调整 · Enter 保存并复制 · Esc 取消", this);
+    hint = new QLabel("Mokou Screenshot  /  拖动框选 · 选完可继续调整 · Enter 保存并复制 · Esc 取消", this);
     hint->setStyleSheet("background:#1b252d;color:#dfe9e6;padding:12px 20px;border-radius:12px;");
     hint->adjustSize();
     hint->move(qMax(8, (width() - hint->width()) / 2), 28);

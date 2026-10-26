@@ -12,12 +12,12 @@
 int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
-    app.setApplicationName("MushroomShot");
-    app.setApplicationDisplayName("蘑菇截图");
+    app.setApplicationName("MokouScreenshot");
+    app.setApplicationDisplayName("Mokou Screenshot");
     app.setOrganizationName("fedokou");
-    app.setDesktopFileName("io.github.fedokou.MushroomShot");
-    app.setApplicationVersion(QStringLiteral(MUSHROOM_VERSION));
-    app.setWindowIcon(QIcon(":/mushroom-shot.svg"));
+    app.setDesktopFileName("io.github.fedokou.MokouScreenshot");
+    app.setApplicationVersion(QStringLiteral(MOKOU_VERSION));
+    app.setWindowIcon(QIcon(":/mokou-screenshot.svg"));
     app.setQuitOnLastWindowClosed(false);
     UnixSignals terminationSignals;
     QCommandLineParser parser;
@@ -91,7 +91,7 @@ int main(int argc, char** argv)
         QTextStream(stderr) << "无法连接用户 D-Bus 会话。请在 KDE 桌面会话中启动。" << Qt::endl;
         return 1;
     }
-    const QString service = "io.github.fedokou.MushroomShot";
+    const QString service = "io.github.fedokou.MokouScreenshot";
     if (!bus.registerService(service)) {
         QDBusInterface remote(service, "/", service, bus);
         const QString method = parser.isSet("settings") ? "ShowSettings"

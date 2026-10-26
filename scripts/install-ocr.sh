@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
-prefix="${MUSHROOM_INSTALL_PREFIX:-$HOME/.local}"
-case "$prefix" in /*) ;; *) printf 'MUSHROOM_INSTALL_PREFIX 需要绝对路径。\n' >&2; exit 2 ;; esac
-runtime="$prefix/share/mushroom-shot/ocr"
+prefix="${MOKOU_INSTALL_PREFIX:-$HOME/.local}"
+case "$prefix" in /*) ;; *) printf 'MOKOU_INSTALL_PREFIX 需要绝对路径。\n' >&2; exit 2 ;; esac
+runtime="$prefix/share/mokou-screenshot/ocr"
 if ! command -v uv >/dev/null; then
   printf '本地 OCR 安装需要 uv，请先安装 uv 再运行此脚本。\n' >&2
   exit 1

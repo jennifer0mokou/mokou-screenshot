@@ -46,7 +46,7 @@ class RepositoryCheck(unittest.TestCase):
             environment = {
                 **os.environ,
                 "PATH": str(commands) + ":" + os.environ["PATH"],
-                "MUSHROOM_INSTALL_PREFIX": str(prefix),
+                "MOKOU_INSTALL_PREFIX": str(prefix),
                 "XDG_CONFIG_HOME": str(root / "config"),
             }
             subprocess.run(
@@ -55,23 +55,23 @@ class RepositoryCheck(unittest.TestCase):
                 check=True,
                 capture_output=True,
             )
-            autostart = root / "config/autostart/io.github.fedokou.MushroomShot.desktop"
+            autostart = root / "config/autostart/io.github.fedokou.MokouScreenshot.desktop"
             self.assertIn(
-                f'Exec="{prefix}/bin/mushroom-shot" --background', autostart.read_text()
+                f'Exec="{prefix}/bin/mokou-screenshot" --background', autostart.read_text()
             )
-            self.assertFalse((prefix / "share/mushroom-shot/ocr/venv").exists())
+            self.assertFalse((prefix / "share/mokou-screenshot/ocr/venv").exists())
             # The uninstall list must preserve user content, settings and the OCR environment.
             retained = [
-                prefix / "share/mushroom-shot/ocr/venv/keep",
-                root / "config/fedokou/MushroomShot.conf",
+                prefix / "share/mokou-screenshot/ocr/venv/keep",
+                root / "config/fedokou/MokouScreenshot.conf",
             ]
             for path in retained:
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text("keep")
-            notices = prefix / "share/licenses/mushroom-shot/LICENSE"
+            notices = prefix / "share/licenses/mokou-screenshot/LICENSE"
             notices.parent.mkdir(parents=True)
             notices.write_text("license")
-            binary = prefix / "bin/mushroom-shot"
+            binary = prefix / "bin/mokou-screenshot"
             binary.parent.mkdir(parents=True)
             binary.touch()
             subprocess.run(
@@ -87,7 +87,7 @@ class RepositoryCheck(unittest.TestCase):
                 self.assertEqual(path.read_text(), "keep")
 
     def test_installer_arguments(self):
-        environment = {**os.environ, "MUSHROOM_INSTALL_PREFIX": "relative-prefix"}
+        environment = {**os.environ, "MOKOU_INSTALL_PREFIX": "relative-prefix"}
         result = subprocess.run(
             [str(ROOT / "scripts/install.sh"), "--without-ocr"],
             env=environment,

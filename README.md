@@ -1,4 +1,4 @@
-# 蘑菇截图 · MushroomShot
+# Mokou Screenshot
 
 用于 **Fedora KDE Plasma Wayland** 的截图、标注与区域录屏工具。按 **PrtScn** 冻结桌面，框选后继续调整；保存时写入 PNG 并复制图片到剪切板。
 
@@ -30,7 +30,7 @@ sudo dnf install gcc-c++ cmake ninja-build extra-cmake-modules \
 # 本地 OCR 还需要 uv；安装脚本会准备独立的 Python 3.12 和模型
 sudo dnf install uv
 ./scripts/install.sh
-~/.local/bin/mushroom-shot --background
+~/.local/bin/mokou-screenshot --background
 ```
 
 仅使用 API OCR 时可运行 `./scripts/install.sh --without-ocr`，随后在设置→OCR 选择视觉 AI。录屏需要 FFmpeg；录音需要其 PulseAudio 输入、Opus／AAC 编码能力和 pactl。详见 [开发与依赖](docs/DEVELOPMENT.md)。
@@ -55,7 +55,7 @@ sudo dnf install uv
 
 ## OCR 与 AI
 
-RapidOCR 在本地识别，模型只在安装时下载。AI 的地址、模型、翻译语言和提示词在设置中填写；Key 只保留在会话内存，也可通过 `MUSHROOM_API_KEY` 传入。
+RapidOCR 在本地识别，模型只在安装时下载。AI 的地址、模型、翻译语言和提示词在设置中填写；Key 只保留在会话内存，也可通过 `MOKOU_API_KEY` 传入。
 
 模型请求由点击触发：视觉 OCR／识图只发送当前选区的合成图，翻译只发送 OCR 原文。识别结果、译文和输入背景不进入导出的 PNG。图片不会为识别而写入临时文件。
 
