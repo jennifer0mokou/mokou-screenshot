@@ -1,0 +1,13 @@
+/build*/
+/.artifacts/
+/.venv/
+/dist/
+__pycache__/
+*.py[cod]
+*.user
+.env
+.env.*
+!.env.example
+*.onnx
+*.pem
+*.key

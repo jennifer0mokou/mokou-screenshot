@@ -1,0 +1,32 @@
+name: Build and check
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  fedora:
+    runs-on: ubuntu-latest
+    container: fedora:44
+    timeout-minutes: 20
+    steps:
+      - name: Install build dependencies
+        run: |
+          dnf install -y git gcc-c++ cmake ninja-build extra-cmake-modules \
+            qt6-qtbase-devel qt6-qtwayland-devel kf6-kglobalaccel-devel \
+            kpipewire-devel layer-shell-qt-devel plasma-wayland-protocols-devel \
+            dbus-daemon python3 ffmpeg-free dejavu-sans-fonts
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          persist-credentials: false
+      - name: Build
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release
+          cmake --build build --parallel 2
+      - name: Check
+        run: ctest --test-dir build --output-on-failure
+      - name: Check install tree
+        run: DESTDIR="$PWD/stage" cmake --install build

@@ -1,0 +1,21 @@
+[Desktop Entry]
+Type=Application
+Name=蘑菇截图
+GenericName=截图、标注与录屏
+Comment=框选、编辑、复制，在 Fedora KDE 上自然完成
+Exec="@CMAKE_INSTALL_PREFIX@/bin/mushroom-shot" --capture
+Icon=mushroom-shot
+Terminal=false
+Categories=Utility;Qt;KDE;
+StartupNotify=false
+X-KDE-DBUS-Restricted-Interfaces=org.kde.KWin.ScreenShot2
+X-KDE-Wayland-Interfaces=zkde_screencast_unstable_v1
+Actions=Capture;Settings;
+
+[Desktop Action Capture]
+Name=区域截图
+Exec="@CMAKE_INSTALL_PREFIX@/bin/mushroom-shot" --capture
+
+[Desktop Action Settings]
+Name=设置
+Exec="@CMAKE_INSTALL_PREFIX@/bin/mushroom-shot" --settings
